@@ -3,5 +3,6 @@ package main
 import "fmt"
 
 func main() {
-	fmt.Println("Hello world")
+	//TODO: Сделать конфигурацию
+	panic(fmt.Errorf("not implemented"))
 }
