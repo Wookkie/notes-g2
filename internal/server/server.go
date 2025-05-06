@@ -2,21 +2,22 @@ package server
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 
+	"github.com/Wookkie/notes-g2/internal"
 	"github.com/gin-gonic/gin"
 )
 
 type Server struct {
-	cfg       any
+	cfg       *internal.Config
 	httpServe *http.Server
 }
 
-func New(host string, port string) *Server {
+func New(cfg *internal.Config) *Server {
 	httpServe := http.Server{
-		Addr: host + ":" + port,
+		Addr: fmt.Sprintf("%s:%d", cfg.Host, cfg.Port),
 	}
-	//fmt.Sprintf("%s:%d", cfg.Host, cfg.Port)
 
 	router := gin.Default()
 	configRoutes(router)
@@ -25,7 +26,7 @@ func New(host string, port string) *Server {
 
 	return &Server{
 		httpServe: &httpServe,
-		//cfg:       cfg,
+		cfg:       cfg,
 	}
 }
 
