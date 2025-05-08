@@ -19,24 +19,23 @@ func New(cfg *internal.Config) *Server {
 		Addr: fmt.Sprintf("%s:%d", cfg.Host, cfg.Port),
 	}
 
-	router := gin.Default()
-	configRoutes(router)
-
-	httpServe.Handler = router
-
-	return &Server{
+	myServer := Server{
 		httpServe: &httpServe,
 		cfg:       cfg,
 	}
+	myServer.configRoutes()
+
+	return &myServer
 }
 
-func configRoutes(router *gin.Engine) {
+func (s *Server) configRoutes() {
+	router := gin.Default()
 	router.GET("/")
 	users := router.Group("/users")
 	{
 		users.GET("/porfile")
 		users.POST("/register")
-		users.POST("/login")
+		users.POST("/login", s.login)
 	}
 
 	notes := router.Group("/notes")
@@ -47,6 +46,8 @@ func configRoutes(router *gin.Engine) {
 		notes.PUT("/:id")
 		notes.DELETE("/:id")
 	}
+
+	s.httpServe.Handler = router
 }
 
 func (s *Server) Run() error {
